@@ -2,36 +2,50 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Para Nata ❤️</title>
 
 <style>
-body {
+html, body {
     margin: 0;
+    height: 100%;
     font-family: 'Segoe UI', sans-serif;
-    height: 100vh;
     overflow: hidden;
-    background: #111;
+    background: #000; /* respaldo, nunca se ve */
 }
 
-#slideshow {
+/* CONTENEDOR DE FONDOS */
+#background {
     position: fixed;
+    inset: 0;
+    z-index: -3;
+}
+
+/* CAPAS */
+.bg {
+    position: absolute;
     inset: 0;
     background-size: cover;
     background-position: center;
-    transition: filter 1.5s ease-in-out;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 3s ease-in-out;
 }
 
-#darken {
+.bg.active {
+    opacity: 1;
+}
+
+/* CAPA OSCURA */
+#dark {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.4);
-    pointer-events: none;
+    background: rgba(0,0,0,0.55);
+    z-index: -2;
 }
 
+/* CONTENIDO */
 .overlay {
-    position: fixed;
-    inset: 0;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,7 +58,7 @@ body {
     text-align: center;
     color: white;
     max-width: 420px;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(4px);
 }
 
 button {
@@ -56,39 +70,35 @@ button {
     cursor: pointer;
 }
 
+/* CORAZONES */
 .heart {
     position: fixed;
     color: pink;
     font-size: 20px;
-    animation: float 6s linear forwards;
+    animation: float 6s linear infinite;
 }
 
 @keyframes float {
     from { bottom: -10px; opacity: 1; }
     to { bottom: 100vh; opacity: 0; }
 }
-
-.final-text {
-    font-size: 40px;
-    color: white;
-    text-align: center;
-    text-shadow: 0 0 20px black;
-}
 </style>
 </head>
 
 <body>
 
-<div id="slideshow"></div>
-<div id="darken"></div>
+<!-- FONDOS -->
+<div id="background">
+    <div class="bg active" id="bg1"></div>
+    <div class="bg" id="bg2"></div>
+</div>
+
+<div id="dark"></div>
 
 <div class="overlay">
     <div class="card" id="card">
         <h1>Nata ❤️</h1>
-        <p>
-            Desde que llegaste a mi vida,<br>
-            todo tiene más sentido.
-        </p>
+        <p>Desde que llegaste a mi vida,<br>todo tiene más sentido.</p>
         <h2>¿Quieres ser mi San Valentín? 🌹</h2>
         <button onclick="aceptar()">Sí 💖</button>
     </div>
@@ -103,66 +113,85 @@ allow="autoplay"></iframe>
 
 <script>
 const fotos = [
- "fotos/1.jpg","fotos/2.jpg","fotos/3.jpg","fotos/4.jpg","fotos/5.jpg",
- "fotos/6.jpg","fotos/7.jpg","fotos/8.jpg","fotos/9.jpg","fotos/10.jpg",
- "fotos/11.jpg"
+ "./fotos/1.jpg",
+ "./fotos/2.jpg",
+ "./fotos/3.jpg",
+ "./fotos/4.jpg",
+ "./fotos/5.jpg",
+ "./fotos/6.jpg",
+ "./fotos/7.jpg",
+ "./fotos/8.jpg",
+ "./fotos/9.jpg",
+ "./fotos/10.jpg"
 ];
 
 let index = 0;
-let intervalo = null;
-const fondo = document.getElementById("slideshow");
+let activo = true;
+let cargadas = [];
 
-function cambiarFondo() {
-    fondo.style.filter = "brightness(60%)";
-    setTimeout(() => {
-        fondo.style.backgroundImage = `url('${fotos[index]}')`;
-        fondo.style.filter = "brightness(100%)";
-        index++;
-        if (index >= fotos.length - 1) {
-            clearInterval(intervalo);
+const bg1 = document.getElementById("bg1");
+const bg2 = document.getElementById("bg2");
+
+/* 🔒 PRE-CARGA TOTAL */
+let loaded = 0;
+fotos.forEach((src, i) => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => {
+        cargadas[i] = src;
+        loaded++;
+        if (loaded === fotos.length) iniciar();
+    };
+});
+
+/* 🚀 SOLO INICIA CUANDO TODO ESTÁ CARGADO */
+function iniciar() {
+    bg1.style.backgroundImage = `url(${cargadas[0]})`;
+
+    setInterval(() => {
+        index = (index + 1) % cargadas.length;
+
+        if (activo) {
+            bg2.style.backgroundImage = `url(${cargadas[index]})`;
+            bg2.classList.add("active");
+            bg1.classList.remove("active");
+        } else {
+            bg1.style.backgroundImage = `url(${cargadas[index]})`;
+            bg1.classList.add("active");
+            bg2.classList.remove("active");
         }
-    }, 1200);
+        activo = !activo;
+    }, 8000);
 }
 
-function aceptar() {
+function aceptar(){
     document.getElementById("card").innerHTML = `
-        <h1>💘 Hasta la muerte 💘</h1>
-        <p>
-        Nata, eres la única mujer<br>
-        de la cual siempre voy a estar enamorado.<br><br>
-        Cada latido de mi corazón lleva tu nombre.<br>
-        Contigo hoy, mañana y siempre.
-        </p>
+    <h1>💘 Hasta la muerte 💘</h1>
+    <p>
+    Nata, eres la única mujer<br>
+    de la cual siempre voy a estar enamorado.<br><br>
+    Cada latido de mi corazón lleva tu nombre.<br>
+    Contigo hoy, mañana y siempre.
+    </p>
     `;
     document.getElementById("music").style.display = "block";
-
-    fondo.style.backgroundImage = `url('${fotos[0]}')`;
-    index = 1;
-
-    intervalo = setInterval(cambiarFondo, 8000);
-
-    // corazones
-    setInterval(()=>{
-        let h=document.createElement("div");
-        h.className="heart";
-        h.innerHTML="❤️";
-        h.style.left=Math.random()*100+"vw";
-        document.body.appendChild(h);
-        setTimeout(()=>h.remove(),6000);
-    },400);
 }
 
-// Mostrar última foto fija con texto
-setTimeout(()=>{
-    fondo.style.backgroundImage = "url('fotos/11.jpg')";
-    document.querySelector(".overlay").innerHTML = `
-        <div class="final-text">Te amo Nata ❤️</div>
-    `;
-}, 90000);
+/* corazones */
+setInterval(()=>{
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="❤️";
+    h.style.left=Math.random()*100+"vw";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+},300);
 </script>
 
 </body>
 </html>
+
+
 
 
 
