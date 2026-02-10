@@ -11,14 +11,17 @@ body {
     height: 100vh;
     overflow: hidden;
 
-    /* FONDO GRIS */
-    background-color: #777;
+    background-color: #666;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 
-    /* Transición lenta */
-    transition: opacity 3s ease-in-out;
+    transition: filter 3s ease-in-out;
+}
+
+/* CAPA OSCURA PARA EL FADE */
+.fade {
+    filter: brightness(45%);
 }
 
 .overlay {
@@ -75,14 +78,12 @@ button {
     </div>
 </div>
 
-<!-- MÚSICA (se activa con el botón) -->
+<!-- Música -->
 <iframe id="music" width="0" height="0"
-src=""
 allow="autoplay"
 style="display:none;"></iframe>
 
 <script>
-// LISTA DE FOTOS
 const fotos = [
   "fotos/1.jpg",
   "fotos/2.jpg",
@@ -99,48 +100,45 @@ const fotos = [
 let index = 0;
 let imagenes = [];
 
-// Precarga de imágenes
+// Precargar imágenes
 fotos.forEach(src => {
     const img = new Image();
     img.src = src;
     imagenes.push(img);
 });
 
-// Fondo inicial
 window.onload = () => {
     document.body.style.backgroundImage = `url(${imagenes[0].src})`;
 };
 
-// Cambio lento de fondo (IGUAL AL ÚLTIMO CÓDIGO)
+// TRANSICIÓN CON OSCURECIMIENTO
 setInterval(() => {
     index = (index + 1) % imagenes.length;
     const img = imagenes[index];
 
     if (img.complete) {
-        document.body.style.opacity = 0;
+        document.body.classList.add("fade"); // oscurece
+
         setTimeout(() => {
             document.body.style.backgroundImage = `url(${img.src})`;
-            document.body.style.opacity = 1;
-        }, 1500); // transición suave
+            document.body.classList.remove("fade"); // aclara
+        }, 1500);
     }
-}, 8000); // 8 segundos por foto
+}, 8000);
 
-// BOTÓN "SÍ" → activa música
+// Botón Sí
 function aceptar(){
     document.getElementById("card").innerHTML = `
     <h1>💘 Hasta la muerte 💘</h1>
     <p>
         Nata, eres la única mujer<br>
         de la cual siempre voy a estar enamorado.<br><br>
-        Cada latido de mi corazón lleva tu nombre.<br>
-        Contigo hoy, mañana y siempre.
+        Cada latido de mi corazón lleva tu nombre.
     </p>
     `;
 
-    // ACTIVAR MÚSICA
-    const music = document.getElementById("music");
-    music.src = "https://www.youtube.com/embed/7U0JZP0c1nQ?autoplay=1";
-    music.style.display = "block";
+    document.getElementById("music").src =
+    "https://www.youtube.com/embed/7U0JZP0c1nQ?autoplay=1";
 }
 
 // Corazones
@@ -156,6 +154,8 @@ setInterval(()=>{
 
 </body>
 </html>
+
+
 
 
 
