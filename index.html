@@ -12,7 +12,21 @@ body {
     overflow: hidden;
     background-size: cover;
     background-position: center;
-    transition: background-image 1.5s ease-in-out;
+    animation: fondo 60s infinite;
+}
+
+@keyframes fondo {
+    0%   { background-image: url("./fotos/1.jpg"); }
+    10%  { background-image: url("./fotos/2.jpg"); }
+    20%  { background-image: url("./fotos/3.jpg"); }
+    30%  { background-image: url("./fotos/4.jpg"); }
+    40%  { background-image: url("./fotos/5.jpg"); }
+    50%  { background-image: url("./fotos/6.jpg"); }
+    60%  { background-image: url("./fotos/7.jpg"); }
+    70%  { background-image: url("./fotos/8.jpg"); }
+    80%  { background-image: url("./fotos/9.jpg"); }
+    90%  { background-image: url("./fotos/10.jpg"); }
+    100% { background-image: url("./fotos/1.jpg"); }
 }
 
 .overlay {
@@ -77,57 +91,33 @@ allow="autoplay"></iframe>
 </div>
 
 <script>
-// LISTA DE LAS 10 FOTOS
-const fotos = [
-  "fotos/1.jpg",
-  "fotos/2.jpg",
-  "fotos/3.jpg",
-  "fotos/4.jpg",
-  "fotos/5.jpg",
-  "fotos/6.jpg",
-  "fotos/7.jpg",
-  "fotos/8.jpg",
-  "fotos/9.jpg",
-  "fotos/10.jpg"
-];
-
-let i = 0;
-
-// fondo inicial
-document.body.style.backgroundImage = `url(${fotos[0]})`;
-
-// cambia de foto cada 5 segundos
-setInterval(() => {
-    i = (i + 1) % fotos.length;
-    document.body.style.backgroundImage = `url(${fotos[i]})`;
-}, 5000);
-
 function aceptar(){
-    document.getElementById("card").innerHTML = `
-    <h1>💘 Hasta la muerte 💘</h1>
-    <p>
-    Nata, eres la única mujer<br>
-    de la cual siempre voy a estar enamorado.<br><br>
-    Cada latido de mi corazón lleva tu nombre.<br>
-    Contigo hoy, mañana y siempre.
-    </p>
-    `;
-    document.getElementById("music").style.display = "block";
+document.getElementById("card").innerHTML = `
+<h1>💘 Hasta la muerte 💘</h1>
+<p>
+Nata, eres la única mujer<br>
+de la cual siempre voy a estar enamorado.<br><br>
+Cada latido de mi corazón lleva tu nombre.<br>
+Contigo hoy, mañana y siempre.
+</p>
+`;
+document.getElementById("music").style.display = "block";
 }
 
-// corazones
 setInterval(()=>{
-    let h=document.createElement("div");
-    h.className="heart";
-    h.innerHTML="❤️";
-    h.style.left=Math.random()*100+"vw";
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),6000);
+let h=document.createElement("div");
+h.className="heart";
+h.innerHTML="❤️";
+h.style.left=Math.random()*100+"vw";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),6000);
 },300);
 </script>
 
 </body>
 </html>
+
+
 
 
 
