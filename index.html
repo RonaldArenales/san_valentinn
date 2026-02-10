@@ -10,17 +10,17 @@ html, body {
     height: 100%;
     font-family: 'Segoe UI', sans-serif;
     overflow: hidden;
-    background: #000;
+    background: #000; /* respaldo, nunca se ve */
 }
 
-/* CONTENEDOR FONDO */
+/* CONTENEDOR DE FONDOS */
 #background {
     position: fixed;
     inset: 0;
     z-index: -3;
 }
 
-/* CAPAS DE FONDO */
+/* CAPAS */
 .bg {
     position: absolute;
     inset: 0;
@@ -61,22 +61,6 @@ html, body {
     backdrop-filter: blur(4px);
 }
 
-/* TEXTO FINAL */
-#finalText {
-    position: fixed;
-    inset: 0;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: white;
-    font-size: 48px;
-    font-weight: bold;
-    z-index: 5;
-    text-shadow: 0 0 20px black;
-    pointer-events: none; /* 🔑 NO bloquea interacción */
-}
-
 button {
     background: #ffb3c6;
     border: none;
@@ -111,8 +95,6 @@ button {
 
 <div id="dark"></div>
 
-<div id="finalText">Te amo, Nata ❤️</div>
-
 <div class="overlay">
     <div class="card" id="card">
         <h1>Nata ❤️</h1>
@@ -143,38 +125,38 @@ const fotos = [
  "./fotos/10.jpg"
 ];
 
-const fotoFinal = "./fotos/final.jpg";
-
 let index = 0;
 let activo = true;
-let intervalo;
+let cargadas = [];
 
 const bg1 = document.getElementById("bg1");
 const bg2 = document.getElementById("bg2");
 
-/* PRE-CARGA SEGURA */
-let cargadas = 0;
-[...fotos, fotoFinal].forEach(src => {
+/* 🔒 PRE-CARGA TOTAL */
+let loaded = 0;
+fotos.forEach((src, i) => {
     const img = new Image();
     img.src = src;
     img.onload = () => {
-        cargadas++;
-        if (cargadas === fotos.length + 1) iniciar();
+        cargadas[i] = src;
+        loaded++;
+        if (loaded === fotos.length) iniciar();
     };
 });
 
+/* 🚀 SOLO INICIA CUANDO TODO ESTÁ CARGADO */
 function iniciar() {
-    bg1.style.backgroundImage = `url(${fotos[0]})`;
+    bg1.style.backgroundImage = `url(${cargadas[0]})`;
 
-    intervalo = setInterval(() => {
-        index = (index + 1) % fotos.length;
+    setInterval(() => {
+        index = (index + 1) % cargadas.length;
 
         if (activo) {
-            bg2.style.backgroundImage = `url(${fotos[index]})`;
+            bg2.style.backgroundImage = `url(${cargadas[index]})`;
             bg2.classList.add("active");
             bg1.classList.remove("active");
         } else {
-            bg1.style.backgroundImage = `url(${fotos[index]})`;
+            bg1.style.backgroundImage = `url(${cargadas[index]})`;
             bg1.classList.add("active");
             bg2.classList.remove("active");
         }
@@ -183,21 +165,15 @@ function iniciar() {
 }
 
 function aceptar(){
-    clearInterval(intervalo);
-
-    // Forzar última foto en ambas capas
-    bg1.style.backgroundImage = `url(${fotoFinal})`;
-    bg2.style.backgroundImage = `url(${fotoFinal})`;
-    bg1.classList.add("active");
-    bg2.classList.remove("active");
-
-    // Mostrar texto final
-    document.getElementById("finalText").style.display = "flex";
-
-    // Quitar SOLO la tarjeta
-    document.getElementById("card").style.display = "none";
-
-    // Música
+    document.getElementById("card").innerHTML = `
+    <h1>💘 Hasta la muerte 💘</h1>
+    <p>
+    Nata, eres la única mujer<br>
+    de la cual siempre voy a estar enamorado.<br><br>
+    Cada latido de mi corazón lleva tu nombre.<br>
+    Contigo hoy, mañana y siempre.
+    </p>
+    `;
     document.getElementById("music").style.display = "block";
 }
 
@@ -214,6 +190,8 @@ setInterval(()=>{
 
 </body>
 </html>
+
+
 
 
 
