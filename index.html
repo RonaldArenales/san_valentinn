@@ -11,8 +11,8 @@ body {
     height: 100vh;
     overflow: hidden;
 
-    /* Fondo de respaldo */
-    background-color: #000;
+    /* FONDO GRIS */
+    background-color: #777;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -22,7 +22,7 @@ body {
 }
 
 .overlay {
-    background: rgba(0,0,0,0.55);
+    background: rgba(0,0,0,0.45);
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -30,7 +30,7 @@ body {
 }
 
 .card {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.2);
     padding: 40px;
     border-radius: 20px;
     text-align: center;
@@ -75,15 +75,14 @@ button {
     </div>
 </div>
 
-<!-- Música -->
-<div id="music" style="display:none;">
-    <iframe width="0" height="0"
-    src="https://www.youtube.com/embed/7U0JZP0c1nQ?autoplay=1"
-    allow="autoplay"></iframe>
-</div>
+<!-- MÚSICA (se activa con el botón) -->
+<iframe id="music" width="0" height="0"
+src=""
+allow="autoplay"
+style="display:none;"></iframe>
 
 <script>
-// LISTA DE LAS 10 FOTOS
+// LISTA DE FOTOS
 const fotos = [
   "fotos/1.jpg",
   "fotos/2.jpg",
@@ -100,7 +99,7 @@ const fotos = [
 let index = 0;
 let imagenes = [];
 
-// PRECARGA DE IMÁGENES
+// Precarga de imágenes
 fotos.forEach(src => {
     const img = new Image();
     img.src = src;
@@ -112,7 +111,7 @@ window.onload = () => {
     document.body.style.backgroundImage = `url(${imagenes[0].src})`;
 };
 
-// Cambio lento de fondo (8 segundos por foto)
+// Cambio lento de fondo (IGUAL AL ÚLTIMO CÓDIGO)
 setInterval(() => {
     index = (index + 1) % imagenes.length;
     const img = imagenes[index];
@@ -122,11 +121,11 @@ setInterval(() => {
         setTimeout(() => {
             document.body.style.backgroundImage = `url(${img.src})`;
             document.body.style.opacity = 1;
-        }, 1500); // fade suave
+        }, 1500); // transición suave
     }
-}, 8000);
+}, 8000); // 8 segundos por foto
 
-// Botón aceptar
+// BOTÓN "SÍ" → activa música
 function aceptar(){
     document.getElementById("card").innerHTML = `
     <h1>💘 Hasta la muerte 💘</h1>
@@ -137,10 +136,14 @@ function aceptar(){
         Contigo hoy, mañana y siempre.
     </p>
     `;
-    document.getElementById("music").style.display = "block";
+
+    // ACTIVAR MÚSICA
+    const music = document.getElementById("music");
+    music.src = "https://www.youtube.com/embed/7U0JZP0c1nQ?autoplay=1";
+    music.style.display = "block";
 }
 
-// Corazones flotando
+// Corazones
 setInterval(()=>{
     let h = document.createElement("div");
     h.className = "heart";
@@ -153,6 +156,8 @@ setInterval(()=>{
 
 </body>
 </html>
+
+
 
 
 
