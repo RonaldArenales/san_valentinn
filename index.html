@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Para Nata ❤️</title>
 
 <style>
@@ -14,14 +13,14 @@ html, body {
     background: #000;
 }
 
-/* CONTENEDOR DE FONDOS */
+/* CONTENEDOR FONDO */
 #background {
     position: fixed;
     inset: 0;
     z-index: -3;
 }
 
-/* CAPAS DE FONDO */
+/* CAPAS */
 .bg {
     position: absolute;
     inset: 0;
@@ -40,7 +39,7 @@ html, body {
 #dark {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.55);
+    background: rgba(0,0,0,0.6);
     z-index: -2;
 }
 
@@ -71,6 +70,21 @@ button {
     cursor: pointer;
 }
 
+/* TEXTO FINAL */
+#finalText {
+    position: fixed;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    font-size: 48px;
+    font-weight: bold;
+    z-index: 10;
+    text-shadow: 0 0 20px black;
+}
+
 /* CORAZONES */
 .heart {
     position: fixed;
@@ -96,20 +110,19 @@ button {
 
 <div id="dark"></div>
 
-<!-- CONTENIDO -->
+<!-- TEXTO FINAL -->
+<div id="finalText">Te amo, Nata ❤️</div>
+
 <div class="overlay">
     <div class="card" id="card">
         <h1>Nata ❤️</h1>
-        <p>
-            Desde que llegaste a mi vida,<br>
-            todo tiene más sentido.
-        </p>
+        <p>Desde que llegaste a mi vida,<br>todo tiene más sentido.</p>
         <h2>¿Quieres ser mi San Valentín? 🌹</h2>
         <button onclick="aceptar()">Sí 💖</button>
     </div>
 </div>
 
-<!-- MÚSICA -->
+<!-- Música -->
 <div id="music" style="display:none;">
 <iframe width="0" height="0"
 src="https://www.youtube.com/embed/7U0JZP0c1nQ?autoplay=1"
@@ -128,59 +141,69 @@ const fotos = [
  "./fotos/8.jpg",
  "./fotos/9.jpg",
  "./fotos/10.jpg"
+
+
 ];
+
+const fotoFinal = "./fotos/final.jpg";
 
 let index = 0;
 let activo = true;
+let intervalo;
 
 const bg1 = document.getElementById("bg1");
 const bg2 = document.getElementById("bg2");
 
-/* MOSTRAR PRIMERA FOTO DE INMEDIATO */
-const primera = new Image();
-primera.src = fotos[0];
-primera.onload = () => {
-    bg1.style.backgroundImage = `url(${fotos[0]})`;
-    bg1.classList.add("active");
-};
+/* PRE-CARGA */
+let cargadas = [];
+let loaded = 0;
 
-/* PRECARGA DEL RESTO */
-fotos.slice(1).forEach(src => {
+[...fotos, fotoFinal].forEach((src, i) => {
     const img = new Image();
     img.src = src;
+    img.onload = () => {
+        cargadas.push(src);
+        loaded++;
+        if (loaded === fotos.length + 1) iniciar();
+    };
 });
 
-/* SLIDESHOW */
-setInterval(() => {
-    index = (index + 1) % fotos.length;
 
-    if (activo) {
-        bg2.style.backgroundImage = `url(${fotos[index]})`;
-        bg2.classList.add("active");
-        bg1.classList.remove("active");
-    } else {
-        bg1.style.backgroundImage = `url(${fotos[index]})`;
-        bg1.classList.add("active");
-        bg2.classList.remove("active");
-    }
-    activo = !activo;
-}, 8000);
+function iniciar() {
+    bg1.style.backgroundImage = `url(${fotos[0]})`;
 
-/* BOTÓN */
-function aceptar(){
-    document.getElementById("card").innerHTML = `
-        <h1>💘 Hasta la muerte 💘</h1>
-        <p>
-        Nata, eres la única mujer<br>
-        de la cual siempre voy a estar enamorado.<br><br>
-        Cada latido de mi corazón lleva tu nombre.<br>
-        Contigo hoy, mañana y siempre.
-        </p>
-    `;
-    document.getElementById("music").style.display = "block";
+    intervalo = setInterval(() => {
+        index = (index + 1) % fotos.length;
+
+        if (activo) {
+            bg2.style.backgroundImage = `url(${fotos[index]})`;
+            bg2.classList.add("active");
+            bg1.classList.remove("active");
+        } else {
+            bg1.style.backgroundImage = `url(${fotos[index]})`;
+            bg1.classList.add("active");
+            bg2.classList.remove("active");
+        }
+        activo = !activo;
+    }, 8000);
 }
 
-/* CORAZONES */
+function aceptar(){
+    clearInterval(intervalo); // 🔴 detener carrusel
+
+    bg1.style.backgroundImage = `url(${fotoFinal})`;
+    bg2.style.backgroundImage = `url(${fotoFinal})`;
+    bg1.classList.add("active");
+    bg2.classList.remove("active");
+
+    document.getElementById("finalText").style.display = "flex";
+
+    document.getElementById("music").style.display = "block";
+
+    document.querySelector(".overlay").style.display = "none";
+}
+
+/* corazones */
 setInterval(()=>{
     let h=document.createElement("div");
     h.className="heart";
@@ -193,6 +216,8 @@ setInterval(()=>{
 
 </body>
 </html>
+
+
 
 
 
