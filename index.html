@@ -10,11 +10,30 @@ body {
     font-family: 'Segoe UI', sans-serif;
     height: 100vh;
     overflow: hidden;
-    background-size: cover;
-    background-position: center;
-    animation: fondo 60s infinite;
 }
 
+/* CAPA DE FONDO (AQUÍ VAN LAS FOTOS) */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: fondo 80s infinite;
+    z-index: -2;
+}
+
+/* CAPA OSCURA SUAVE */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: -1;
+}
+
+/* ANIMACIÓN SIN GRIS */
 @keyframes fondo {
     0%   { background-image: url("./fotos/1.jpg"); }
     10%  { background-image: url("./fotos/2.jpg"); }
@@ -30,7 +49,6 @@ body {
 }
 
 .overlay {
-    background: rgba(0,0,0,0.55);
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -44,6 +62,7 @@ body {
     text-align: center;
     color: white;
     max-width: 420px;
+    backdrop-filter: blur(4px);
 }
 
 button {
@@ -104,6 +123,7 @@ Contigo hoy, mañana y siempre.
 document.getElementById("music").style.display = "block";
 }
 
+// corazones
 setInterval(()=>{
 let h=document.createElement("div");
 h.className="heart";
@@ -116,6 +136,8 @@ setTimeout(()=>h.remove(),6000);
 
 </body>
 </html>
+
+
 
 
 
