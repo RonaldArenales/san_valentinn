@@ -5,49 +5,44 @@
 <title>Para Nata ❤️</title>
 
 <style>
-body {
+html, body {
     margin: 0;
+    height: 100%;
     font-family: 'Segoe UI', sans-serif;
-    height: 100vh;
     overflow: hidden;
 }
 
-/* CAPA DE FONDO (AQUÍ VAN LAS FOTOS) */
-body::before {
-    content: "";
+/* CONTENEDOR DE FONDOS */
+#background {
     position: fixed;
+    inset: 0;
+    z-index: -3;
+}
+
+/* CAPAS DE IMAGEN */
+.bg {
+    position: absolute;
     inset: 0;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    animation: fondo 80s infinite;
-    z-index: -2;
+    opacity: 0;
+    transition: opacity 3s ease-in-out;
 }
 
-/* CAPA OSCURA SUAVE */
-body::after {
-    content: "";
+.bg.active {
+    opacity: 1;
+}
+
+/* CAPA OSCURA */
+#dark {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.55);
-    z-index: -1;
+    z-index: -2;
 }
 
-/* ANIMACIÓN SIN GRIS */
-@keyframes fondo {
-    0%   { background-image: url("./fotos/1.jpg"); }
-    10%  { background-image: url("./fotos/2.jpg"); }
-    20%  { background-image: url("./fotos/3.jpg"); }
-    30%  { background-image: url("./fotos/4.jpg"); }
-    40%  { background-image: url("./fotos/5.jpg"); }
-    50%  { background-image: url("./fotos/6.jpg"); }
-    60%  { background-image: url("./fotos/7.jpg"); }
-    70%  { background-image: url("./fotos/8.jpg"); }
-    80%  { background-image: url("./fotos/9.jpg"); }
-    90%  { background-image: url("./fotos/10.jpg"); }
-    100% { background-image: url("./fotos/1.jpg"); }
-}
-
+/* CONTENIDO */
 .overlay {
     height: 100vh;
     display: flex;
@@ -74,6 +69,7 @@ button {
     cursor: pointer;
 }
 
+/* CORAZONES */
 .heart {
     position: fixed;
     color: pink;
@@ -89,6 +85,14 @@ button {
 </head>
 
 <body>
+
+<!-- FONDOS -->
+<div id="background">
+    <div class="bg active" id="bg1"></div>
+    <div class="bg" id="bg2"></div>
+</div>
+
+<div id="dark"></div>
 
 <div class="overlay">
     <div class="card" id="card">
@@ -110,32 +114,73 @@ allow="autoplay"></iframe>
 </div>
 
 <script>
+const fotos = [
+ "./fotos/1.jpg",
+ "./fotos/2.jpg",
+ "./fotos/3.jpg",
+ "./fotos/4.jpg",
+ "./fotos/5.jpg",
+ "./fotos/6.jpg",
+ "./fotos/7.jpg",
+ "./fotos/8.jpg",
+ "./fotos/9.jpg",
+ "./fotos/10.jpg"
+];
+
+let index = 0;
+let activo = true;
+
+const bg1 = document.getElementById("bg1");
+const bg2 = document.getElementById("bg2");
+
+// imagen inicial
+bg1.style.backgroundImage = `url(${fotos[0]})`;
+
+// cambio de fondo
+setInterval(() => {
+    index = (index + 1) % fotos.length;
+
+    if (activo) {
+        bg2.style.backgroundImage = `url(${fotos[index]})`;
+        bg2.classList.add("active");
+        bg1.classList.remove("active");
+    } else {
+        bg1.style.backgroundImage = `url(${fotos[index]})`;
+        bg1.classList.add("active");
+        bg2.classList.remove("active");
+    }
+
+    activo = !activo;
+}, 8000); // 8 segundos por foto
+
 function aceptar(){
-document.getElementById("card").innerHTML = `
-<h1>💘 Hasta la muerte 💘</h1>
-<p>
-Nata, eres la única mujer<br>
-de la cual siempre voy a estar enamorado.<br><br>
-Cada latido de mi corazón lleva tu nombre.<br>
-Contigo hoy, mañana y siempre.
-</p>
-`;
-document.getElementById("music").style.display = "block";
+    document.getElementById("card").innerHTML = `
+    <h1>💘 Hasta la muerte 💘</h1>
+    <p>
+    Nata, eres la única mujer<br>
+    de la cual siempre voy a estar enamorado.<br><br>
+    Cada latido de mi corazón lleva tu nombre.<br>
+    Contigo hoy, mañana y siempre.
+    </p>
+    `;
+    document.getElementById("music").style.display = "block";
 }
 
 // corazones
 setInterval(()=>{
-let h=document.createElement("div");
-h.className="heart";
-h.innerHTML="❤️";
-h.style.left=Math.random()*100+"vw";
-document.body.appendChild(h);
-setTimeout(()=>h.remove(),6000);
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="❤️";
+    h.style.left=Math.random()*100+"vw";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
 },300);
 </script>
 
 </body>
 </html>
+
+
 
 
 
