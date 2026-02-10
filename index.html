@@ -11,13 +11,14 @@ body {
     height: 100vh;
     overflow: hidden;
 
-    /* Fondo de respaldo (NUNCA gris) */
+    /* Fondo de respaldo */
     background-color: #000;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 
-    transition: opacity 1.2s ease-in-out;
+    /* Transición lenta */
+    transition: opacity 3s ease-in-out;
 }
 
 .overlay {
@@ -76,13 +77,13 @@ button {
 
 <!-- Música -->
 <div id="music" style="display:none;">
-<iframe width="0" height="0"
-src="https://www.youtube.com/embed/7U0JZP0c1nQ?autoplay=1"
-allow="autoplay"></iframe>
+    <iframe width="0" height="0"
+    src="https://www.youtube.com/embed/7U0JZP0c1nQ?autoplay=1"
+    allow="autoplay"></iframe>
 </div>
 
 <script>
-// LISTA DE FOTOS
+// LISTA DE LAS 10 FOTOS
 const fotos = [
   "fotos/1.jpg",
   "fotos/2.jpg",
@@ -99,19 +100,19 @@ const fotos = [
 let index = 0;
 let imagenes = [];
 
-// PRECARGA DE IMÁGENES (CLAVE)
+// PRECARGA DE IMÁGENES
 fotos.forEach(src => {
     const img = new Image();
     img.src = src;
     imagenes.push(img);
 });
 
-// fondo inicial seguro
+// Fondo inicial
 window.onload = () => {
     document.body.style.backgroundImage = `url(${imagenes[0].src})`;
 };
 
-// cambio de fondo SOLO cuando la imagen ya cargó
+// Cambio lento de fondo (8 segundos por foto)
 setInterval(() => {
     index = (index + 1) % imagenes.length;
     const img = imagenes[index];
@@ -121,36 +122,38 @@ setInterval(() => {
         setTimeout(() => {
             document.body.style.backgroundImage = `url(${img.src})`;
             document.body.style.opacity = 1;
-        }, 400);
+        }, 1500); // fade suave
     }
-}, 5000);
+}, 8000);
 
+// Botón aceptar
 function aceptar(){
     document.getElementById("card").innerHTML = `
     <h1>💘 Hasta la muerte 💘</h1>
     <p>
-    Nata, eres la única mujer<br>
-    de la cual siempre voy a estar enamorado.<br><br>
-    Cada latido de mi corazón lleva tu nombre.<br>
-    Contigo hoy, mañana y siempre.
+        Nata, eres la única mujer<br>
+        de la cual siempre voy a estar enamorado.<br><br>
+        Cada latido de mi corazón lleva tu nombre.<br>
+        Contigo hoy, mañana y siempre.
     </p>
     `;
     document.getElementById("music").style.display = "block";
 }
 
-// corazones
+// Corazones flotando
 setInterval(()=>{
-    let h=document.createElement("div");
-    h.className="heart";
-    h.innerHTML="❤️";
-    h.style.left=Math.random()*100+"vw";
+    let h = document.createElement("div");
+    h.className = "heart";
+    h.innerHTML = "❤️";
+    h.style.left = Math.random() * 100 + "vw";
     document.body.appendChild(h);
     setTimeout(()=>h.remove(),6000);
-},300);
+}, 300);
 </script>
 
 </body>
 </html>
+
 
 
 
