@@ -10,22 +10,13 @@ body {
     font-family: 'Segoe UI', sans-serif;
     height: 100vh;
     overflow: hidden;
-
-    background-color: #666;
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-
-    transition: filter 3s ease-in-out;
-}
-
-/* CAPA OSCURA PARA EL FADE */
-.fade {
-    filter: brightness(45%);
+    transition: background-image 1.5s ease-in-out;
 }
 
 .overlay {
-    background: rgba(0,0,0,0.45);
+    background: rgba(0,0,0,0.55);
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -33,7 +24,7 @@ body {
 }
 
 .card {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.15);
     padding: 40px;
     border-radius: 20px;
     text-align: center;
@@ -79,11 +70,14 @@ button {
 </div>
 
 <!-- Música -->
-<iframe id="music" width="0" height="0"
-allow="autoplay"
-style="display:none;"></iframe>
+<div id="music" style="display:none;">
+<iframe width="0" height="0"
+src="https://www.youtube.com/embed/7U0JZP0c1nQ?autoplay=1"
+allow="autoplay"></iframe>
+</div>
 
 <script>
+// LISTA DE LAS 10 FOTOS
 const fotos = [
   "fotos/1.jpg",
   "fotos/2.jpg",
@@ -97,63 +91,45 @@ const fotos = [
   "fotos/10.jpg"
 ];
 
-let index = 0;
-let imagenes = [];
+let i = 0;
 
-// Precargar imágenes
-fotos.forEach(src => {
-    const img = new Image();
-    img.src = src;
-    imagenes.push(img);
-});
+// fondo inicial
+document.body.style.backgroundImage = `url(${fotos[0]})`;
 
-window.onload = () => {
-    document.body.style.backgroundImage = `url(${imagenes[0].src})`;
-};
-
-// TRANSICIÓN CON OSCURECIMIENTO
+// cambia de foto cada 5 segundos
 setInterval(() => {
-    index = (index + 1) % imagenes.length;
-    const img = imagenes[index];
+    i = (i + 1) % fotos.length;
+    document.body.style.backgroundImage = `url(${fotos[i]})`;
+}, 5000);
 
-    if (img.complete) {
-        document.body.classList.add("fade"); // oscurece
-
-        setTimeout(() => {
-            document.body.style.backgroundImage = `url(${img.src})`;
-            document.body.classList.remove("fade"); // aclara
-        }, 1500);
-    }
-}, 8000);
-
-// Botón Sí
 function aceptar(){
     document.getElementById("card").innerHTML = `
     <h1>💘 Hasta la muerte 💘</h1>
     <p>
-        Nata, eres la única mujer<br>
-        de la cual siempre voy a estar enamorado.<br><br>
-        Cada latido de mi corazón lleva tu nombre.
+    Nata, eres la única mujer<br>
+    de la cual siempre voy a estar enamorado.<br><br>
+    Cada latido de mi corazón lleva tu nombre.<br>
+    Contigo hoy, mañana y siempre.
     </p>
     `;
-
-    document.getElementById("music").src =
-    "https://www.youtube.com/embed/7U0JZP0c1nQ?autoplay=1";
+    document.getElementById("music").style.display = "block";
 }
 
-// Corazones
+// corazones
 setInterval(()=>{
-    let h = document.createElement("div");
-    h.className = "heart";
-    h.innerHTML = "❤️";
-    h.style.left = Math.random() * 100 + "vw";
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="❤️";
+    h.style.left=Math.random()*100+"vw";
     document.body.appendChild(h);
     setTimeout(()=>h.remove(),6000);
-}, 300);
+},300);
 </script>
 
 </body>
 </html>
+
+
 
 
 
