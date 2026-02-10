@@ -10,9 +10,14 @@ body {
     font-family: 'Segoe UI', sans-serif;
     height: 100vh;
     overflow: hidden;
+
+    /* Fondo de respaldo (NUNCA gris) */
+    background-color: #000;
     background-size: cover;
     background-position: center;
-    transition: background-image 1.5s ease-in-out;
+    background-repeat: no-repeat;
+
+    transition: opacity 1.2s ease-in-out;
 }
 
 .overlay {
@@ -77,7 +82,7 @@ allow="autoplay"></iframe>
 </div>
 
 <script>
-// LISTA DE LAS 10 FOTOS
+// LISTA DE FOTOS
 const fotos = [
   "fotos/1.jpg",
   "fotos/2.jpg",
@@ -91,15 +96,33 @@ const fotos = [
   "fotos/10.jpg"
 ];
 
-let i = 0;
+let index = 0;
+let imagenes = [];
 
-// fondo inicial
-document.body.style.backgroundImage = `url(${fotos[0]})`;
+// PRECARGA DE IMÁGENES (CLAVE)
+fotos.forEach(src => {
+    const img = new Image();
+    img.src = src;
+    imagenes.push(img);
+});
 
-// cambia de foto cada 5 segundos
+// fondo inicial seguro
+window.onload = () => {
+    document.body.style.backgroundImage = `url(${imagenes[0].src})`;
+};
+
+// cambio de fondo SOLO cuando la imagen ya cargó
 setInterval(() => {
-    i = (i + 1) % fotos.length;
-    document.body.style.backgroundImage = `url(${fotos[i]})`;
+    index = (index + 1) % imagenes.length;
+    const img = imagenes[index];
+
+    if (img.complete) {
+        document.body.style.opacity = 0;
+        setTimeout(() => {
+            document.body.style.backgroundImage = `url(${img.src})`;
+            document.body.style.opacity = 1;
+        }, 400);
+    }
 }, 5000);
 
 function aceptar(){
@@ -128,6 +151,8 @@ setInterval(()=>{
 
 </body>
 </html>
+
+
 
 
 
