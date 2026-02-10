@@ -10,6 +10,7 @@ html, body {
     height: 100%;
     font-family: 'Segoe UI', sans-serif;
     overflow: hidden;
+    background: #000; /* respaldo, nunca se ve */
 }
 
 /* CONTENEDOR DE FONDOS */
@@ -19,7 +20,7 @@ html, body {
     z-index: -3;
 }
 
-/* CAPAS DE IMAGEN */
+/* CAPAS */
 .bg {
     position: absolute;
     inset: 0;
@@ -97,10 +98,7 @@ button {
 <div class="overlay">
     <div class="card" id="card">
         <h1>Nata ❤️</h1>
-        <p>
-            Desde que llegaste a mi vida,<br>
-            todo tiene más sentido.
-        </p>
+        <p>Desde que llegaste a mi vida,<br>todo tiene más sentido.</p>
         <h2>¿Quieres ser mi San Valentín? 🌹</h2>
         <button onclick="aceptar()">Sí 💖</button>
     </div>
@@ -129,29 +127,42 @@ const fotos = [
 
 let index = 0;
 let activo = true;
+let cargadas = [];
 
 const bg1 = document.getElementById("bg1");
 const bg2 = document.getElementById("bg2");
 
-// imagen inicial
-bg1.style.backgroundImage = `url(${fotos[0]})`;
+/* 🔒 PRE-CARGA TOTAL */
+let loaded = 0;
+fotos.forEach((src, i) => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => {
+        cargadas[i] = src;
+        loaded++;
+        if (loaded === fotos.length) iniciar();
+    };
+});
 
-// cambio de fondo
-setInterval(() => {
-    index = (index + 1) % fotos.length;
+/* 🚀 SOLO INICIA CUANDO TODO ESTÁ CARGADO */
+function iniciar() {
+    bg1.style.backgroundImage = `url(${cargadas[0]})`;
 
-    if (activo) {
-        bg2.style.backgroundImage = `url(${fotos[index]})`;
-        bg2.classList.add("active");
-        bg1.classList.remove("active");
-    } else {
-        bg1.style.backgroundImage = `url(${fotos[index]})`;
-        bg1.classList.add("active");
-        bg2.classList.remove("active");
-    }
+    setInterval(() => {
+        index = (index + 1) % cargadas.length;
 
-    activo = !activo;
-}, 8000); // 8 segundos por foto
+        if (activo) {
+            bg2.style.backgroundImage = `url(${cargadas[index]})`;
+            bg2.classList.add("active");
+            bg1.classList.remove("active");
+        } else {
+            bg1.style.backgroundImage = `url(${cargadas[index]})`;
+            bg1.classList.add("active");
+            bg2.classList.remove("active");
+        }
+        activo = !activo;
+    }, 8000);
+}
 
 function aceptar(){
     document.getElementById("card").innerHTML = `
@@ -166,7 +177,7 @@ function aceptar(){
     document.getElementById("music").style.display = "block";
 }
 
-// corazones
+/* corazones */
 setInterval(()=>{
     let h=document.createElement("div");
     h.className="heart";
@@ -179,6 +190,7 @@ setInterval(()=>{
 
 </body>
 </html>
+
 
 
 
